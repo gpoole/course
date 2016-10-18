@@ -48,3 +48,28 @@ func = foldRight (.) id
 const = a -> b -> a
 const a b = a
 Basically ignore b
+
+<$> (a -> b) -> f a -> f b == fmap
+<*> f (a -> b) -> f a -> f b == apply
+<=<<> (a -> f b) -> f a -> f b == bind
+<<<=> (f a -> b) -> f a -> f b == cobind
+
+What is the reader pattern?
+
+list keeps applying the parser till it doesn't work anymore
+
+applicative is for taking the result of a map and applying it to a next set of things
+
+pure produces an applicative value that does nothing to the other argument in an apply
+
+Parser contains a single function that maps Input (Char) to something
+pure creates a parser that returns a Result with whatever the passed value is
+calling map on Parser creates a new parser that will call the function on the result
+calling apply on Parser takes a Parser on the left with a function partially applied to the
+result and passes the next parser's result as the second parameter
+calling bind on Parser creates a new parser that will run after the previous one and
+receive the result
+
+map = modifying
+apply = combining
+bind = sequencing

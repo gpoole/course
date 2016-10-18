@@ -217,6 +217,7 @@ lift2 ::
   -> f b
   -> f c
 lift2 fn a b = fn <$> a <*> b
+-- apply a function on a and b to turn them into c
   -- error "todo: Course.Applicative#lift2"
 
 -- | Apply a ternary function in the environment.
