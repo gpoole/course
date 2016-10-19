@@ -73,3 +73,5 @@ receive the result
 map = modifying
 apply = combining
 bind = sequencing
+
+sequence = List f a -> f List a

@@ -457,8 +457,9 @@ thisMany n p =
 -- True
 ageParser ::
   Parser Int
-ageParser =
-  error "todo: Course.Parser#ageParser"
+-- ageParser = list digit >>= \d ->
+--   pure (digitToInt d)
+ageParser = natural
 
 -- | Write a parser for Person.firstName.
 -- /First Name: non-empty string that starts with a capital letter and is followed by zero or more lower-case letters/
@@ -570,7 +571,13 @@ phoneBodyParser = list (digit ||| is '.' ||| is '-')
 -- True
 phoneParser ::
   Parser Chars
-phoneParser = list (digit ||| is '.' ||| is '-')
+phoneParser = do
+  d <- digit
+  phoneBody <- phoneBodyParser
+  is '#' >>> pure (d :. phoneBody)
+  -- _ <- is '#'
+  -- pure (d :. phoneBody)
+-- phoneParser = (:.) <$> digit <*> phoneBodyParser ((>>>) is '#')
 
 -- | Write a parser for Person.
 --
@@ -619,7 +626,33 @@ phoneParser = list (digit ||| is '.' ||| is '-')
 personParser ::
   Parser Person
 personParser =
-  error "todo: Course.Parser#personParser"
+  -- age <- ageParser
+  -- _ <- is ' '
+  -- firstName <- firstNameParser
+  -- _ <- is ' '
+  -- surname <- surnameParser
+  -- _ <- is ' '
+  -- smoker <- smokerParser
+  -- _ <- is ' '
+  -- phone <- phoneParser
+  -- pure (Person age firstName surname smoker phone)
+  Person <$>
+    ageParser <*>
+    spaces1 *>
+    firstNameParser <*>
+    spaces1 *>
+    surnameParser <*>
+    spaces1 *>
+    smokerParser <*>
+    spaces1 *>
+    phoneParser
+  -- age <- ageParser
+  -- firstName <- firstNameParser
+  -- surname <- surnameParser
+  -- smoker <- smokerParser
+  -- phone <- phoneParser
+  -- pure (Person age firstName surname smoker phone)
+  -- error "todo: Course.Parser#personParser"
 
 -- Make sure all the tests pass!
 

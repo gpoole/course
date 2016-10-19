@@ -61,8 +61,9 @@ the contents of c
 -- /Tip:/ use @getArgs@ and @run@
 main ::
   IO ()
-main =
-  error "todo: Course.FileIO#main"
+main = do
+  args <- getArgs
+  void (sequence (run <$> args))
 
 type FilePath =
   Chars
@@ -71,31 +72,45 @@ type FilePath =
 run ::
   Chars
   -> IO ()
-run =
-  error "todo: Course.FileIO#run"
+run list = do
+  l <- getFileList list
+  f <- getFiles l
+  printFiles f
+  -- getFiles <$> getFileList
+
+getFileList ::
+  FilePath -> IO (List FilePath)
+getFileList path = do
+  (_, c) <- getFile path
+  pure (sequence (lines c))
 
 getFiles ::
   List FilePath
   -> IO (List (FilePath, Chars))
-getFiles =
-  error "todo: Course.FileIO#getFiles"
+getFiles paths = sequence (getFile <$> paths)
+-- getFiles = sequence . (<$>) getFile
 
 getFile ::
   FilePath
   -> IO (FilePath, Chars)
+-- getFile p = do
+--   c <- readFile p
+--   pure (p, c)
+  -- \p -> ((,) p) <$> readFile p
+-- a -> IO (a, c)
 getFile =
-  error "todo: Course.FileIO#getFile"
+  lift2 (<$>) (,) readFile
 
 printFiles ::
   List (FilePath, Chars)
   -> IO ()
-printFiles =
-  error "todo: Course.FileIO#printFiles"
+-- printFiles files = sequence (\(p, c) -> printFile p c <$> files)
+-- printFiles files = void (sequence (uncurry printFile <$> files))
+printFiles = void . sequence . (<$>) (uncurry printFile)
 
 printFile ::
   FilePath
   -> Chars
   -> IO ()
-printFile =
-  error "todo: Course.FileIO#printFile"
-
+printFile p c =
+  putStrLn ("============ " ++ p ++ "\n" ++ c)
